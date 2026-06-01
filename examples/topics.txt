@@ -1,0 +1,5 @@
+AI agent tooling for real workflows
+How I built a long-audio meeting notes pipeline
+Why agent products need harnesses, not only prompts
+Small daily commits as product marketing
+What a good AI tool README should explain
