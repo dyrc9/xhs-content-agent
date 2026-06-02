@@ -67,6 +67,6 @@ def _check(args: argparse.Namespace) -> None:
     report = check_note(draft)
     write_quality_report(report, args.out)
     if report.passed:
-        print("check passed")
+        print(f"check passed; wrote quality report to {args.out}")
     else:
-        print("check completed with warnings")
+        print(f"check completed with warnings; review {args.out / 'quality-report.md'}")

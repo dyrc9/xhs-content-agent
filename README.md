@@ -61,6 +61,14 @@ Validate a publish package:
 xhs-content-agent check runs/template-note/note.json
 ```
 
+That command writes:
+
+```text
+runs/check/
+  quality-report.json
+  quality-report.md
+```
+
 ## Output
 
 Each draft run writes:
@@ -70,9 +78,11 @@ runs/template-note/
   note.json
   note.md
   publish-checklist.md
+  quality-report.json
+  quality-report.md
 ```
 
-The checklist is intentionally manual. It helps a human review tone, claims, hashtags, images, and timing before publishing.
+The checklist is intentionally manual. It helps a human review tone, claims, hashtags, images, and timing before publishing. The quality report gives both a machine-readable artifact for future evaluation work and a readable Markdown summary for everyday editing.
 
 ## Positioning
 

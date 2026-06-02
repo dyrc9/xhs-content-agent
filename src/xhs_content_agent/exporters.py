@@ -38,6 +38,7 @@ def write_quality_report(report: QualityReport, out_dir: Path) -> None:
         json.dumps(to_dict(report), ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
+    (out_dir / "quality-report.md").write_text(quality_report_markdown(report), encoding="utf-8")
 
 
 def note_to_markdown(draft: NoteDraft) -> str:
@@ -80,3 +81,23 @@ def checklist_markdown(draft: NoteDraft) -> str:
 - [ ] Images match the content
 - [ ] Human reviewed before publishing
 """
+
+
+def quality_report_markdown(report: QualityReport) -> str:
+    lines = ["# Quality Report", ""]
+    lines.append(f"Status: {'Passed' if report.passed else 'Warnings found'}")
+    lines.append("")
+    lines.append("## Warnings")
+    lines.append("")
+    if report.warnings:
+        lines.extend(f"- {warning}" for warning in report.warnings)
+    else:
+        lines.append("- None.")
+    lines.append("")
+    lines.append("## Suggestions")
+    lines.append("")
+    if report.suggestions:
+        lines.extend(f"- {suggestion}" for suggestion in report.suggestions)
+    else:
+        lines.append("- None.")
+    return "\n".join(lines) + "\n"
