@@ -6,6 +6,7 @@ from pathlib import Path
 from .calendar import build_calendar
 from .exporters import write_calendar, write_note, write_quality_report
 from .generators import create_generator
+from .inspectors import describe_note, description_to_json, description_to_text
 from .io import read_note, read_text, read_topics
 from .quality import check_note
 
@@ -42,6 +43,11 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("--out", type=Path, default=Path("runs/check"))
     check.set_defaults(func=_check)
 
+    inspect = subparsers.add_parser("inspect", help="Inspect a note draft artifact without writing files.")
+    inspect.add_argument("note", type=Path)
+    inspect.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
+    inspect.set_defaults(func=_inspect)
+
     return parser
 
 
@@ -70,3 +76,12 @@ def _check(args: argparse.Namespace) -> None:
         print(f"check passed; wrote quality report to {args.out}")
     else:
         print(f"check completed with warnings; review {args.out / 'quality-report.md'}")
+
+
+def _inspect(args: argparse.Namespace) -> None:
+    draft = read_note(args.note)
+    description = describe_note(draft, args.note)
+    if args.json:
+        print(description_to_json(description))
+    else:
+        print(description_to_text(description), end="")

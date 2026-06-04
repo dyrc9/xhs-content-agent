@@ -30,6 +30,24 @@ class QualityReport:
     suggestions: list[str]
 
 
+@dataclass(frozen=True)
+class DraftDescription:
+    source_path: str
+    title: str
+    title_length: int
+    body_characters: int
+    body_paragraphs: int
+    hashtag_count: int
+    hashtags: list[str]
+    image_prompt_count: int
+    has_call_to_action: bool
+    source_summary_present: bool
+    spammy_terms_found: list[str]
+    passed: bool
+    warnings: list[str]
+    suggestions: list[str]
+
+
 def to_dict(value: Any) -> Any:
     if hasattr(value, "__dataclass_fields__"):
         return {key: to_dict(item) for key, item in asdict(value).items()}
