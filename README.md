@@ -59,6 +59,7 @@ Validate a publish package:
 
 ```bash
 xhs-content-agent check runs/template-note/note.json
+xhs-content-agent check runs/template-note/note.json --json
 ```
 
 Inspect a draft artifact before publishing or after edits:
@@ -92,6 +93,8 @@ runs/template-note/
 The checklist is intentionally manual. It helps a human review tone, claims, hashtags, images, and timing before publishing. The quality report gives both a machine-readable artifact for future evaluation work and a readable Markdown summary for everyday editing.
 
 The `inspect` command is the fastest read-only checkpoint. It reports title length, body size, paragraph count, hashtag and image-prompt counts, call-to-action coverage, spammy terms, and the current quality warnings without creating a new output directory.
+
+The `check` command can also run in a read-only automation mode with `--json`, which prints the full quality gate result to stdout instead of creating a `runs/check` directory. This is useful for CI, local harnesses, or shell pipelines that want a machine-readable pass/warn signal.
 
 ## Positioning
 

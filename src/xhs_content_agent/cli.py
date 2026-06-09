@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 
 from .calendar import build_calendar
-from .exporters import write_calendar, write_note, write_quality_report
+from .exporters import quality_report_to_json, write_calendar, write_note, write_quality_report
 from .generators import create_generator
 from .inspectors import describe_note, description_to_json, description_to_text
 from .io import read_note, read_text, read_topics
@@ -41,6 +41,7 @@ def build_parser() -> argparse.ArgumentParser:
     check = subparsers.add_parser("check", help="Check a note draft package.")
     check.add_argument("note", type=Path)
     check.add_argument("--out", type=Path, default=Path("runs/check"))
+    check.add_argument("--json", action="store_true", help="Print machine-readable JSON without writing files.")
     check.set_defaults(func=_check)
 
     inspect = subparsers.add_parser("inspect", help="Inspect a note draft artifact without writing files.")
@@ -71,6 +72,10 @@ def _calendar(args: argparse.Namespace) -> None:
 def _check(args: argparse.Namespace) -> None:
     draft = read_note(args.note)
     report = check_note(draft)
+    if args.json:
+        print(quality_report_to_json(report))
+        return
+
     write_quality_report(report, args.out)
     if report.passed:
         print(f"check passed; wrote quality report to {args.out}")

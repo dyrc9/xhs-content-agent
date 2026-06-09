@@ -34,10 +34,7 @@ def write_calendar(items: list[CalendarItem], out_dir: Path) -> None:
 
 def write_quality_report(report: QualityReport, out_dir: Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "quality-report.json").write_text(
-        json.dumps(to_dict(report), ensure_ascii=False, indent=2),
-        encoding="utf-8",
-    )
+    (out_dir / "quality-report.json").write_text(quality_report_to_json(report), encoding="utf-8")
     (out_dir / "quality-report.md").write_text(quality_report_markdown(report), encoding="utf-8")
 
 
@@ -101,3 +98,7 @@ def quality_report_markdown(report: QualityReport) -> str:
     else:
         lines.append("- None.")
     return "\n".join(lines) + "\n"
+
+
+def quality_report_to_json(report: QualityReport) -> str:
+    return json.dumps(to_dict(report), ensure_ascii=False, indent=2)
