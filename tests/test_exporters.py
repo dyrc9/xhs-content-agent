@@ -61,6 +61,36 @@ class ExportersTest(unittest.TestCase):
             self.assertEqual(result["warnings"], [])
             self.assertFalse((Path(temp_dir) / "runs").exists())
 
+    def test_check_command_strict_returns_non_zero_for_warnings(self):
+        payload = {
+            "title": "百分百必火",
+            "hook": "hook",
+            "body": "短内容",
+            "hashtags": ["AI工具"],
+            "image_prompts": [],
+            "call_to_action": "",
+            "source_summary": "summary",
+        }
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            note_path = Path(temp_dir) / "note.json"
+            note_path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+            previous_cwd = Path.cwd()
+            os.chdir(temp_dir)
+            try:
+                with patch("sys.stdout.write") as write_mock:
+                    exit_code = main(["check", str(note_path), "--json", "--strict"])
+            finally:
+                os.chdir(previous_cwd)
+
+            rendered = "".join(call.args[0] for call in write_mock.call_args_list)
+            result = json.loads(rendered)
+
+            self.assertEqual(exit_code, 1)
+            self.assertFalse(result["passed"])
+            self.assertTrue(result["warnings"])
+            self.assertFalse((Path(temp_dir) / "runs").exists())
+
 
 if __name__ == "__main__":
     unittest.main()

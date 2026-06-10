@@ -14,8 +14,8 @@ from .quality import check_note
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
-    args.func(args)
-    return 0
+    result = args.func(args)
+    return 0 if result is None else result
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -42,6 +42,7 @@ def build_parser() -> argparse.ArgumentParser:
     check.add_argument("note", type=Path)
     check.add_argument("--out", type=Path, default=Path("runs/check"))
     check.add_argument("--json", action="store_true", help="Print machine-readable JSON without writing files.")
+    check.add_argument("--strict", action="store_true", help="Return a non-zero exit code when warnings are found.")
     check.set_defaults(func=_check)
 
     inspect = subparsers.add_parser("inspect", help="Inspect a note draft artifact without writing files.")
@@ -74,13 +75,15 @@ def _check(args: argparse.Namespace) -> None:
     report = check_note(draft)
     if args.json:
         print(quality_report_to_json(report))
-        return
+        return 0 if (report.passed or not args.strict) else 1
 
     write_quality_report(report, args.out)
     if report.passed:
         print(f"check passed; wrote quality report to {args.out}")
-    else:
-        print(f"check completed with warnings; review {args.out / 'quality-report.md'}")
+        return 0
+
+    print(f"check completed with warnings; review {args.out / 'quality-report.md'}")
+    return 0 if not args.strict else 1
 
 
 def _inspect(args: argparse.Namespace) -> None:
