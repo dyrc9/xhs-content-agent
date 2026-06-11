@@ -31,6 +31,7 @@ class InspectorsTest(unittest.TestCase):
         text = description_to_text(description)
         self.assertIn("# Draft Inspection", text)
         self.assertIn("Quality status: warnings found", text)
+        self.assertIn("Add a short source summary so future edits stay grounded.", text)
 
     def test_cli_inspect_json_prints_description(self):
         payload = {

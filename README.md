@@ -97,6 +97,13 @@ The `inspect` command is the fastest read-only checkpoint. It reports title leng
 
 The `check` command can also run in a read-only automation mode with `--json`, which prints the full quality gate result to stdout instead of creating a `runs/check` directory. Add `--strict` when you want warnings to fail CI or a local harness with a non-zero exit code.
 
+The quality gate now catches a few common packaging mistakes before publish review:
+
+- duplicate hashtags that make a note look repetitive
+- oversized bodies that are hard to scan on mobile
+- single-block bodies that need paragraph breaks
+- missing source summaries that make later edits drift from the original material
+
 ## Positioning
 
 This is part of a broader AI Agent / Harness Engineering portfolio. The project treats content operations as an inspectable workflow:
