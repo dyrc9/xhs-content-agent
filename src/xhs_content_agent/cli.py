@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from .calendar import build_calendar
+from .diagnostics import describe_environment, doctor_report_to_json, doctor_report_to_text
 from .exporters import quality_report_to_json, write_calendar, write_note, write_quality_report
 from .generators import create_generator
 from .inspectors import describe_note, description_to_json, description_to_text
@@ -50,6 +51,10 @@ def build_parser() -> argparse.ArgumentParser:
     inspect.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
     inspect.set_defaults(func=_inspect)
 
+    doctor = subparsers.add_parser("doctor", help="Check local runtime readiness for draft generation.")
+    doctor.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
+    doctor.set_defaults(func=_doctor)
+
     return parser
 
 
@@ -93,3 +98,11 @@ def _inspect(args: argparse.Namespace) -> None:
         print(description_to_json(description))
     else:
         print(description_to_text(description), end="")
+
+
+def _doctor(args: argparse.Namespace) -> None:
+    report = describe_environment()
+    if args.json:
+        print(doctor_report_to_json(report))
+    else:
+        print(doctor_report_to_text(report), end="")

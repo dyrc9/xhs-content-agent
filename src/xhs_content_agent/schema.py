@@ -48,6 +48,16 @@ class DraftDescription:
     suggestions: list[str]
 
 
+@dataclass(frozen=True)
+class DoctorReport:
+    python_version: str
+    openai_package_installed: bool
+    openai_package_version: str | None
+    openai_api_key_configured: bool
+    available_generators: list[str]
+    missing_optional_features: list[str]
+
+
 def to_dict(value: Any) -> Any:
     if hasattr(value, "__dataclass_fields__"):
         return {key: to_dict(item) for key, item in asdict(value).items()}

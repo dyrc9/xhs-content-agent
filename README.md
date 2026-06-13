@@ -35,6 +35,13 @@ For local development:
 pip install -e ".[dev,openai]"
 ```
 
+Check local readiness before using the OpenAI generator:
+
+```bash
+xhs-content-agent doctor
+xhs-content-agent doctor --json
+```
+
 ## Quick Start
 
 Generate a draft from a local idea file:
@@ -47,6 +54,13 @@ Generate an offline draft without API calls:
 
 ```bash
 xhs-content-agent draft examples/idea.md --generator template --out runs/template-note
+```
+
+Check whether the OpenAI path is ready before running it:
+
+```bash
+xhs-content-agent doctor
+xhs-content-agent draft examples/idea.md --generator openai --out runs/openai-note
 ```
 
 Create a 7-day content calendar:
@@ -96,6 +110,8 @@ The checklist is intentionally manual. It helps a human review tone, claims, has
 The `inspect` command is the fastest read-only checkpoint. It reports title length, body size, paragraph count, hashtag and image-prompt counts, call-to-action coverage, spammy terms, and the current quality warnings without creating a new output directory.
 
 The `check` command can also run in a read-only automation mode with `--json`, which prints the full quality gate result to stdout instead of creating a `runs/check` directory. Add `--strict` when you want warnings to fail CI or a local harness with a non-zero exit code.
+
+The `doctor` command is a read-only preflight check for local runtime readiness. It reports the current Python version, whether the optional `openai` package is installed, whether `OPENAI_API_KEY` is configured, and which draft generators are currently available.
 
 The quality gate now catches a few common packaging mistakes before publish review:
 
