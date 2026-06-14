@@ -5,6 +5,7 @@ from .schema import NoteDraft, QualityReport
 
 SPAMMY_WORDS = ["暴富", "稳赚", "躺赚", "必火", "百分百", "无脑", "割韭菜"]
 BODY_WARNING_THRESHOLD = 1200
+HOOK_WARNING_THRESHOLD = 40
 
 
 def _normalize_hashtag(tag: str) -> str:
@@ -14,12 +15,17 @@ def _normalize_hashtag(tag: str) -> str:
 def check_note(draft: NoteDraft) -> QualityReport:
     warnings: list[str] = []
     suggestions: list[str] = []
+    hook = draft.hook.strip()
     normalized_hashtags = [_normalize_hashtag(tag) for tag in draft.hashtags if _normalize_hashtag(tag)]
     unique_hashtags = set(normalized_hashtags)
     body_paragraphs = len([part for part in draft.body.split("\n\n") if part.strip()])
 
     if len(draft.title) > 40:
         warnings.append("Title may be too long for mobile reading.")
+    if not hook:
+        suggestions.append("Add a concise hook so the note angle is obvious before the body starts.")
+    elif len(hook) > HOOK_WARNING_THRESHOLD:
+        warnings.append("Hook may be too long; keep the opening line easy to scan.")
     if len(draft.body) < 80:
         suggestions.append("Body is short. Add more concrete context or implementation detail.")
     if len(draft.body) > BODY_WARNING_THRESHOLD:

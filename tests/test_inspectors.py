@@ -23,13 +23,16 @@ class InspectorsTest(unittest.TestCase):
         description = describe_note(draft, Path("runs/demo/note.json"))
 
         self.assertEqual(description.title_length, len(draft.title))
+        self.assertEqual(description.hook_length, 0)
         self.assertEqual(description.body_paragraphs, 2)
         self.assertEqual(description.hashtag_count, 2)
+        self.assertFalse(description.has_hook)
         self.assertIn("百分百", description.spammy_terms_found)
         self.assertFalse(description.passed)
 
         text = description_to_text(description)
         self.assertIn("# Draft Inspection", text)
+        self.assertIn("Hook: no", text)
         self.assertIn("Quality status: warnings found", text)
         self.assertIn("Add a short source summary so future edits stay grounded.", text)
 
@@ -55,6 +58,8 @@ class InspectorsTest(unittest.TestCase):
         result = json.loads(rendered)
         self.assertEqual(exit_code, 0)
         self.assertEqual(result["source_path"], str(note_path))
+        self.assertTrue(result["has_hook"])
+        self.assertEqual(result["hook_length"], 4)
         self.assertEqual(result["hashtag_count"], 2)
         self.assertTrue(result["passed"])
 

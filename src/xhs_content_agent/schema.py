@@ -35,11 +35,13 @@ class DraftDescription:
     source_path: str
     title: str
     title_length: int
+    hook_length: int
     body_characters: int
     body_paragraphs: int
     hashtag_count: int
     hashtags: list[str]
     image_prompt_count: int
+    has_hook: bool
     has_call_to_action: bool
     source_summary_present: bool
     spammy_terms_found: list[str]

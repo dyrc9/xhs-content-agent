@@ -107,7 +107,7 @@ runs/template-note/
 
 The checklist is intentionally manual. It helps a human review tone, claims, hashtags, images, and timing before publishing. The quality report gives both a machine-readable artifact for future evaluation work and a readable Markdown summary for everyday editing.
 
-The `inspect` command is the fastest read-only checkpoint. It reports title length, body size, paragraph count, hashtag and image-prompt counts, call-to-action coverage, spammy terms, and the current quality warnings without creating a new output directory.
+The `inspect` command is the fastest read-only checkpoint. It reports title length, hook coverage, body size, paragraph count, hashtag and image-prompt counts, call-to-action coverage, spammy terms, and the current quality warnings without creating a new output directory.
 
 The `check` command can also run in a read-only automation mode with `--json`, which prints the full quality gate result to stdout instead of creating a `runs/check` directory. Add `--strict` when you want warnings to fail CI or a local harness with a non-zero exit code.
 
@@ -115,6 +115,7 @@ The `doctor` command is a read-only preflight check for local runtime readiness.
 
 The quality gate now catches a few common packaging mistakes before publish review:
 
+- missing hooks or oversized opening hooks that weaken the first screen
 - duplicate hashtags that make a note look repetitive
 - oversized bodies that are hard to scan on mobile
 - single-block bodies that need paragraph breaks

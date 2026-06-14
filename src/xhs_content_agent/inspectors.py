@@ -16,11 +16,13 @@ def describe_note(draft: NoteDraft, source_path: Path) -> DraftDescription:
         source_path=str(source_path),
         title=draft.title,
         title_length=len(draft.title),
+        hook_length=len(draft.hook.strip()),
         body_characters=len(draft.body),
         body_paragraphs=body_paragraphs,
         hashtag_count=len(draft.hashtags),
         hashtags=draft.hashtags,
         image_prompt_count=len(draft.image_prompts),
+        has_hook=bool(draft.hook.strip()),
         has_call_to_action=bool(draft.call_to_action.strip()),
         source_summary_present=bool(draft.source_summary.strip()),
         spammy_terms_found=spammy_terms_found,
@@ -35,6 +37,8 @@ def description_to_text(description: DraftDescription) -> str:
     lines.append(f"Source: {description.source_path}")
     lines.append(f"Title: {description.title}")
     lines.append(f"Title length: {description.title_length}")
+    lines.append(f"Hook: {'yes' if description.has_hook else 'no'}")
+    lines.append(f"Hook length: {description.hook_length}")
     lines.append(f"Body characters: {description.body_characters}")
     lines.append(f"Body paragraphs: {description.body_paragraphs}")
     lines.append(f"Hashtags: {description.hashtag_count}")
