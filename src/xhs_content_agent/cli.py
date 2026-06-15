@@ -10,6 +10,7 @@ from .generators import create_generator
 from .inspectors import describe_note, description_to_json, description_to_text
 from .io import read_note, read_text, read_topics
 from .quality import check_note
+from .titles import build_title_variants, variants_to_json, variants_to_text
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -50,6 +51,11 @@ def build_parser() -> argparse.ArgumentParser:
     inspect.add_argument("note", type=Path)
     inspect.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
     inspect.set_defaults(func=_inspect)
+
+    titles = subparsers.add_parser("titles", help="Generate title variants for manual packaging review.")
+    titles.add_argument("note", type=Path)
+    titles.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
+    titles.set_defaults(func=_titles)
 
     doctor = subparsers.add_parser("doctor", help="Check local runtime readiness for draft generation.")
     doctor.add_argument("--json", action="store_true", help="Print machine-readable JSON.")
@@ -98,6 +104,15 @@ def _inspect(args: argparse.Namespace) -> None:
         print(description_to_json(description))
     else:
         print(description_to_text(description), end="")
+
+
+def _titles(args: argparse.Namespace) -> None:
+    draft = read_note(args.note)
+    variant_set = build_title_variants(draft)
+    if args.json:
+        print(variants_to_json(variant_set))
+    else:
+        print(variants_to_text(variant_set), end="")
 
 
 def _doctor(args: argparse.Namespace) -> None:

@@ -51,6 +51,21 @@ class DraftDescription:
 
 
 @dataclass(frozen=True)
+class TitleVariant:
+    angle: str
+    title: str
+    length: int
+    mobile_safe: bool
+
+
+@dataclass(frozen=True)
+class TitleVariantSet:
+    source_title: str
+    source_summary_present: bool
+    variants: list[TitleVariant]
+
+
+@dataclass(frozen=True)
 class DoctorReport:
     python_version: str
     openai_package_installed: bool

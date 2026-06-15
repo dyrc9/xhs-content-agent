@@ -84,6 +84,13 @@ xhs-content-agent inspect runs/template-note/note.json
 xhs-content-agent inspect runs/template-note/note.json --json
 ```
 
+Generate a few title variants before final packaging:
+
+```bash
+xhs-content-agent titles runs/template-note/note.json
+xhs-content-agent titles runs/template-note/note.json --json
+```
+
 That command writes:
 
 ```text
@@ -108,6 +115,8 @@ runs/template-note/
 The checklist is intentionally manual. It helps a human review tone, claims, hashtags, images, and timing before publishing. The quality report gives both a machine-readable artifact for future evaluation work and a readable Markdown summary for everyday editing.
 
 The `inspect` command is the fastest read-only checkpoint. It reports title length, hook coverage, body size, paragraph count, hashtag and image-prompt counts, call-to-action coverage, spammy terms, and the current quality warnings without creating a new output directory.
+
+The `titles` command is a read-only packaging helper for title iteration. It turns one draft into several mobile-friendly title options with different angles, which makes manual review and lightweight A/B preparation faster without creating new publish artifacts.
 
 The `check` command can also run in a read-only automation mode with `--json`, which prints the full quality gate result to stdout instead of creating a `runs/check` directory. Add `--strict` when you want warnings to fail CI or a local harness with a non-zero exit code.
 
@@ -136,7 +145,6 @@ Future versions may add browser-assisted publishing, but only with a clear human
 - OpenAI generator with structured JSON output
 - Creator voice profiles
 - Post performance log imports
-- A/B title variants
 - Image prompt packs
 - Manual browser-fill assistant
 - Evaluation fixtures for note quality
